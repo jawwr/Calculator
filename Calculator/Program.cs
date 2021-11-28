@@ -7,21 +7,20 @@ namespace Calculator
     {
         public virtual double Calculate(List<Operation> operations, List<double> numbers)
         {
-            if (!CheckCorectlyInput(operations, numbers))
-                throw new Exception("Количество операций не равно количеству чисел");
+            if (CheckCorectlyInput(operations, numbers))
+                throw new Exception("Количество чисел неверно");
             
-            double result = default;
+            double result = numbers[0];
             for (int i = 0; i < operations.Count; i++)
             {
                 var operation = operations[i];
-                result = operation.Calculate(numbers[i], numbers[i + 1]);
-                numbers[i + 1] = result;
+                result = operation.Calculate(result, numbers[i + 1]);
             }
 
             return result;
         }
 
-        bool CheckCorectlyInput(List<Operation> operations, List<double> numbers) => operations.Count == numbers.Count - 1;
+        bool CheckCorectlyInput(List<Operation> operations, List<double> numbers) => operations.Count != numbers.Count - 1;
     }
 
     public abstract class Operation
@@ -51,8 +50,8 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
-            List<Operation> operations = new List<Operation>{new Plus(), new Plus(), new Division()};
-            List<double> numbers = new List<double>() {1, 3, 2, 3};
+            List<Operation> operations = new List<Operation>{new Plus(), new Plus(), new Multiplication()};
+            List<double> numbers = new List<double>() {1, 3, 2, 5};
             Console.WriteLine(new Calculator().Calculate(operations,numbers));
         }
     }
